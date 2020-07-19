@@ -9,7 +9,6 @@ The implementation of the techniques described in the paper is in the Gen reposi
 This repository contains example code that uses the Gen implementation of automated involutive MCMC for a split-merge reversible jump move in an infinite mixture model (corresponding to Figure 1 of the paper). To run this example, use:
 ```
 cd gen
-
 julia --project=. mixture.jl
 ```
 
