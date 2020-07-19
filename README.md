@@ -2,7 +2,7 @@
 
 TODO: put arxiv link and info here
 
-The paper describes the automated involutive MCMC construct that was originally implemented in the [**Gen probabilistic programming system**](https://www.gen.dev). The code figures in the paper use Gen syntax.
+The paper describes the automated involutive MCMC construct that was originally implemented in the [**Gen probabilistic programming system**](https://www.gen.dev). The code figures in the paper use Gen syntax. The code in the paper uses a modified syntax that has not yet been merged into the master branch of Gen. The previous syntax is described as part of the [Gen involution MCMC documentation](https://www.gen.dev/dev/ref/mcmc/#Involution-MCMC-1).
 
 ## Automated involutive MCMC example using Gen
 The implementation of the techniques described in the paper is in the Gen repository, and not in this repository.
