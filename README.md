@@ -7,7 +7,7 @@ The paper describes the automated involutive MCMC construct that was originally 
 NOTE: The code in the paper uses a modified syntax that has not yet been merged into the master branch of Gen. The previous syntax is described as part of the [Gen involution MCMC documentation](https://www.gen.dev/dev/ref/mcmc/#Involution-MCMC-1). The new syntax, that matches that in the paper, is currently on [this feature branch](https://github.com/probcomp/Gen.jl/tree/20200416-marcoct-translatordsl).
 
 ## Automated involutive MCMC example using Gen
-The implementation of the techniques described in the paper is in the Gen repository, and not in this repository.
+The Gen implementation of the techniques described in the paper is in the Gen repository, and not in this repository.
 This repository contains example code that uses the Gen implementation of automated involutive MCMC for a split-merge reversible jump move in an infinite mixture model (corresponding to Figure 1 of the paper). To run this example, use:
 ```
 cd gen
