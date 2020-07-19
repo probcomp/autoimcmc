@@ -1,8 +1,8 @@
-# Code for 'Automating Involutive MCMC using Probabilistic and Differentiable Programming'
+# Automating Involutive MCMC using Probabilistic and Differentiable Programming
 
 TODO: put arxiv link and info here
 
-The paper describes the automated involutive MCMC construct that was originally implemented in the [**Gen probabilistic programming system**](https://www.gen.dev). The code figures in the paper use Gen syntax.
+The paper describes the automated involutive MCMC construct that was originally implemented in the [**Gen probabilistic programming system**](https://www.gen.dev).
 
 NOTE: The code in the paper uses a modified syntax that has not yet been merged into the master branch of Gen. The previous syntax is described as part of the [Gen involution MCMC documentation](https://www.gen.dev/dev/ref/mcmc/#Involution-MCMC-1). The new syntax, that matches that in the paper, is currently on [this feature branch](https://github.com/probcomp/Gen.jl/tree/20200416-marcoct-translatordsl).
 
