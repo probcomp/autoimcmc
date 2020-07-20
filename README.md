@@ -14,17 +14,9 @@ To run this example, first enter the `gen` directory:
 ```
 cd gen
 ```
-Then install a particular version of Gen using the Julia package manager into the project:
+Then run the example:
 ```
-julia --project=.
-```
-From the Julia REPL, type `]` to enter the Pkg REPL mode and then run:
-```
-pkg> add Gen#20200416-marcoct-translatordsl
-```
-Then type backspace to leave the Pkg REPL mode and run:
-```
-include("mixture.jl")
+julia --project=. mixture.jl
 ```
 
 ## Minimal PyTorch-based languages and automated involutive MCMC example
