@@ -2,7 +2,7 @@
 
 Cusumano-Towner, Marco F. and Alexander K. Lew and Vikash K. Mansinghka. "Automating Involutive MCMC using Probabilistic and Differentiable Programming." arXiv preprint arXiv:1801.03612 (2020) [URL]
 
-The paper describes the automated involutive MCMC construct that was originally implemented in the [**Gen probabilistic programming system**](https://www.gen.dev).
+The paper describes the automated involutive MCMC construct that was previously implemented in the [**Gen probabilistic programming system**](https://www.gen.dev).
 
 NOTE: The code in the paper uses a modified syntax that has not yet been merged into the master branch of Gen. The previous syntax is described as part of the [Gen involution MCMC documentation](https://www.gen.dev/dev/ref/mcmc/#Involution-MCMC-1). The new syntax, that matches that in the paper, is currently on [this feature branch](https://github.com/probcomp/Gen.jl/tree/20200416-marcoct-translatordsl).
 
