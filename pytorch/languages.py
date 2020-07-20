@@ -29,6 +29,7 @@ def trace_and_score(p, *args):
     trace = {}
     lpdf = torch.tensor(0.0)
     def sample(dist, addr):
+        nonlocal lpdf
         val = dist.sample()
         trace[addr] = val
         lpdf += dist.log_prob(val)
@@ -193,7 +194,7 @@ def do_involution_check(
 
     for (addr, val) in rt_state.output_aux_trace.items():
         if isinstance(val, torch.Tensor):
-            if not torch.eq(val, input_aux_trace[addr]):
+            if not torch.allclose(val, input_aux_trace[addr]):
                 raise Exception("involution check failed at aux:", addr, val, input_aux_trace[addr])
         else:
             if val != input_aux_trace[addr]:
@@ -201,7 +202,7 @@ def do_involution_check(
 
     for (addr, val) in input_model_latent_trace.items():
         if isinstance(val, torch.Tensor):
-            if not torch.eq(val, rt_state.output_model_latent_trace[addr]):
+            if not torch.allclose(val, rt_state.output_model_latent_trace[addr]):
                 raise Exception("involution check failed at model:", addr, val, rt_state.output_model_latent_trace[addr])
         else:
             if val != rt_state.output_model_latent_trace[addr]:
@@ -209,14 +210,14 @@ def do_involution_check(
 
     for (addr, val) in input_aux_trace.items():
         if isinstance(val, torch.Tensor):
-            if not torch.eq(val, rt_state.output_aux_trace[addr]):
+            if not torch.allclose(val, rt_state.output_aux_trace[addr]):
                 raise Exception("involution check failed at aux:", addr, val, rt_state.output_aux_trace[addr])
         else:
             if val != rt_state.output_aux_trace[addr]:
                 raise Exception("involution check failed aux: ", addr, val, rt_state.output_aux_trace[addr])
 
 
-def involution_mcmc_step(p, q, f, input_model_latent_trace, observations, check=False):
+def involution_mcmc_step(p, p_args, q, f, input_model_latent_trace, observations, check=False):
 
     # merge latents and observations to form model trace
     input_model_trace = {**input_model_latent_trace, **observations}
@@ -236,87 +237,13 @@ def involution_mcmc_step(p, q, f, input_model_latent_trace, observations, check=
             input_model_latent_trace, input_auxiliary_trace)
 
     # compute acceptance probability
-    prev_score = score(input_model_trace, p)
-    new_score = score(output_model_trace, p)
+    prev_score = score(input_model_trace, p, *p_args)
+    new_score = score(output_model_trace, p, *p_args)
     bwd_score = score(output_auxiliary_trace, q, output_model_trace)
     prob_accept = min(1, torch.exp(new_score - prev_score + logabsdet + bwd_score - fwd_score))
 
     # accept or reject
-    if Bernoulli(prob_accept).sample():
+    if torch.distributions.bernoulli.Bernoulli(prob_accept).sample():
         return (output_model_latent_trace, True)
     else:
         return (input_model_latent_trace, False)
-
-
-###########
-# example #
-###########
-
-Bernoulli = torch.distributions.bernoulli.Bernoulli
-Gamma = torch.distributions.gamma.Gamma
-Normal = torch.distributions.normal.Normal
-Uniform = torch.distributions.uniform.Uniform
-
-pi = 3.1415927410125732
-
-def polar_to_cartesian(r, theta):
-    x = torch.cos(r) * theta
-    y = torch.sin(r) * theta
-    return (x, y)
-
-def cartesian_to_polar(x, y):
-    theta = torch.atan2(y, x)
-    y = torch.sqrt(x * x + y * y)
-    return (theta, y)
-
-def p():
-    u = sample(Normal(0, 1), "u")
-    v = sample(Normal(0, 1), "v")
-    if sample(Bernoulli(0.5), "polar"):
-        r = sample(Gamma(1.0, 1.0), "r")
-        theta = sample(Uniform(-pi/2, pi/2), "theta")
-    else:
-        x = sample(Normal(0.0, 1.0), "x")
-        y = sample(Normal(0.0, 1.0), "y")
-    # TODO observations
-    sample(Normal(0, 1), "z")
-    return None
-
-def q(model_trace):
-    return None
-
-def f():
-    polar = read(model_in["polar"], discrete)
-    if polar:
-        r = read(model_in["r"], continuous)
-        theta = read(model_in["theta"], continuous)
-        (x, y) = polar_to_cartesian(r, theta)
-        write(model_out["x"], x, continuous)
-        write(model_out["y"], y, continuous)
-    else:
-        x = read(model_in["x"], continuous)
-        y = read(model_in["y"], continuous)
-        (r, theta) = cartesian_to_polar(x, y)
-        write(model_out["r"], r, continuous)
-        write(model_out["theta"], theta, continuous)
-    write(model_out["polar"], not polar, discrete)
-    copy(model_out["u"], (MODEL, "u"))
-    u = read(model_in["u"], continuous)
-    v = read(model_in["v"], continuous)
-    write(model_out["v"], u - v, continuous)
-
-latent_trace = {
-        "polar" : True,
-        "r": 1.2,
-        "theta" : 0.12,
-        "u" : -0.123,
-        "v" : 3.31
-}
-
-observations = {
-        "z" : -0.14
-}
-
-for it in range(1, 100):
-    (latent_trace, acc) = involution_mcmc_step(p, q, f, latent_trace, observations, check=True)
-    print(latent_trace, acc)
