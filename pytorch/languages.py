@@ -185,36 +185,20 @@ def do_involution_check(
     f_transformed()
 
     for (addr, val) in rt_state.output_model_latent_trace.items():
-        if isinstance(val, torch.Tensor):
-            if not torch.eq(val, input_model_latent_trace[addr]):
-                raise Exception("involution check failed at model:", addr, val, input_model_latent_trace[addr])
-        else:
-            if val != input_model_latent_trace[addr]:
-                raise Exception("involution check failed model: ", addr, val, input_model_latent_trace[addr])
+        if not torch.allclose(torch.tensor(val), torch.tensor(input_model_latent_trace[addr])):
+            raise Exception("involution check failed at model:", addr, val, input_model_latent_trace[addr])
 
     for (addr, val) in rt_state.output_aux_trace.items():
-        if isinstance(val, torch.Tensor):
-            if not torch.allclose(val, input_aux_trace[addr]):
-                raise Exception("involution check failed at aux:", addr, val, input_aux_trace[addr])
-        else:
-            if val != input_aux_trace[addr]:
-                raise Exception("involution check failed aux: ", addr, val, input_aux_trace[addr])
+        if not torch.allclose(torch.tensor(val), torch.tensor(input_aux_trace[addr])):
+            raise Exception("involution check failed at aux:", addr, val, input_aux_trace[addr])
 
     for (addr, val) in input_model_latent_trace.items():
-        if isinstance(val, torch.Tensor):
-            if not torch.allclose(val, rt_state.output_model_latent_trace[addr]):
-                raise Exception("involution check failed at model:", addr, val, rt_state.output_model_latent_trace[addr])
-        else:
-            if val != rt_state.output_model_latent_trace[addr]:
-                raise Exception("involution check failed model: ", addr, val, input_model_latent_trace[addr])
+        if not torch.allclose(torch.tensor(val), torch.tensor(rt_state.output_model_latent_trace[addr])):
+            raise Exception("involution check failed at model:", addr, val, rt_state.output_model_latent_trace[addr])
 
     for (addr, val) in input_aux_trace.items():
-        if isinstance(val, torch.Tensor):
-            if not torch.allclose(val, rt_state.output_aux_trace[addr]):
-                raise Exception("involution check failed at aux:", addr, val, rt_state.output_aux_trace[addr])
-        else:
-            if val != rt_state.output_aux_trace[addr]:
-                raise Exception("involution check failed aux: ", addr, val, rt_state.output_aux_trace[addr])
+        if not torch.allclose(torch.tensor(val), torch.tensor(rt_state.output_aux_trace[addr])):
+            raise Exception("involution check failed at aux:", addr, val, rt_state.output_aux_trace[addr])
 
 
 def involution_mcmc_step(p, p_args, q, f, input_model_latent_trace, observations, check=False):

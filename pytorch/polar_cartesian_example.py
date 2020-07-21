@@ -50,14 +50,14 @@ def f():
         (r, theta) = cartesian_to_polar(x, y)
         write(model_out["r"], r, continuous)
         write(model_out["theta"], theta, continuous)
-    write(model_out["polar"], not polar, discrete)
+    write(model_out["polar"], 1 - polar, discrete)
     copy(model_out["u"], (MODEL, "u"))
     u = read(model_in["u"], continuous)
     v = read(model_in["v"], continuous)
     write(model_out["v"], u - v, continuous)
 
 latent_trace = {
-        "polar" : True,
+        "polar" : 1,
         "r": 1.2,
         "theta" : 0.12,
         "u" : -0.123,
