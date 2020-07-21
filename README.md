@@ -1,6 +1,6 @@
 # Automating Involutive MCMC using Probabilistic and Differentiable Programming
 
-Cusumano-Towner, Marco F. and Alexander K. Lew and Vikash K. Mansinghka. "Automating Involutive MCMC using Probabilistic and Differentiable Programming." arXiv preprint arXiv:2007.09871 (2020) [URL](https://arxiv.org/pdf/2007.09871.pdf)
+Cusumano-Towner, Marco F. and Alexander K. Lew and Vikash K. Mansinghka. "Automating Involutive MCMC using Probabilistic and Differentiable Programming." arXiv preprint arXiv:2007.09871 (2020) [PDF](https://arxiv.org/pdf/2007.09871.pdf)
 
 The paper describes the automated involutive MCMC construct as implemented in the [**Gen probabilistic programming system**](https://www.gen.dev).
 
